@@ -5,15 +5,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ========================================================================
-  // 1. SCROLL REVEAL (IntersectionObserver for slow, cinematic unfolds)
-  // ========================================================================
+  // Ensure body has js-enabled class for progressive enhancement
+  document.body.classList.add('js-enabled');
+
+  const revealElements = document.querySelectorAll('.reveal-item');
+
   // Staggered graceful entrance for the hero elements on load
   const heroItems = document.querySelectorAll('#hero .reveal-item');
   heroItems.forEach((el, index) => {
     setTimeout(() => {
       el.classList.add('revealed');
-    }, 200 + index * 280);
+    }, 100 + index * 200);
   });
 
   if ('IntersectionObserver' in window) {
@@ -26,14 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, {
       root: null,
-      rootMargin: '0px 0px -30px 0px',
-      threshold: 0.08
+      rootMargin: '50px 0px 0px 0px',
+      threshold: 0.05
     });
 
     revealElements.forEach(el => {
-      if (!el.closest('#hero')) {
-        revealObserver.observe(el);
-      }
+      revealObserver.observe(el);
     });
   } else {
     // Fallback for older browsers
