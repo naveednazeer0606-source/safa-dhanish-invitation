@@ -23,8 +23,68 @@
 </head>
 <body>
 
-  <!-- Background Ambience for Desktop Viewers -->
-  <div class="desktop-backdrop" aria-hidden="true"></div>
+  <!-- Canvas for Subtle Petal & Heart Romantic Particles -->
+  <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- ========================================================
+       ELEGANT INVITATION OPENER / ENVELOPE OVERLAY
+       ======================================================== -->
+  <aside class="invitation-opener" id="invitationOpener" aria-label="Wedding Invitation Envelope" role="dialog" aria-modal="true">
+    <div class="opener-backdrop" aria-hidden="true"></div>
+    
+    <div class="opener-card-wrap">
+      <div class="opener-card" id="openerCard" role="button" tabindex="0" aria-label="Open Safa & Dhanish Ahmed Wedding Invitation">
+        
+        <!-- Dual Gold Hairline Inset Frame -->
+        <div class="opener-frame" aria-hidden="true">
+          <div class="opener-border-outer"></div>
+          <div class="opener-border-inner"></div>
+        </div>
+
+        <!-- Subtle Top Floral Arch Accent -->
+        <div class="opener-floral-top" aria-hidden="true">
+          <img src="assets/floral-divider.jpg" alt="" class="opener-floral-img" />
+        </div>
+
+        <!-- Card Envelope Content -->
+        <div class="opener-content">
+          
+          <p class="opener-bismillah" lang="ar" dir="rtl" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+
+          <!-- Maroon Monogram SD -->
+          <div class="opener-monogram">
+            <img src="assets/monogram-sd.png" alt="Safa & Dhanish Monogram" class="opener-monogram-img" width="90" height="97" />
+          </div>
+
+          <span class="opener-eyebrow">WEDDING INVITATION</span>
+          <h1 class="opener-couple-title">SAFA &amp; DHANISH</h1>
+          
+          <div class="opener-gold-rule" aria-hidden="true"></div>
+
+          <p class="opener-subline">THE NIKAH CEREMONY</p>
+          <p class="opener-dateline">SUNDAY, 10 JANUARY 2027</p>
+
+          <!-- Tactile Wax Seal Accent -->
+          <div class="wax-seal-wrapper" aria-hidden="true">
+            <div class="wax-seal">
+              <span class="seal-ring"></span>
+              <span class="seal-ornament">❖</span>
+              <span class="seal-initials">S &amp; D</span>
+            </div>
+          </div>
+
+          <!-- Understated "Tap to open" prompt -->
+          <div class="opener-prompt-wrapper">
+            <span class="opener-sparkle" aria-hidden="true">✧</span>
+            <span class="opener-prompt-text">Tap to open</span>
+            <span class="opener-sparkle" aria-hidden="true">✧</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </aside>
 
   <!-- Main Luxury Invitation Canvas Container -->
   <main class="invitation-container" id="invitationCard">
