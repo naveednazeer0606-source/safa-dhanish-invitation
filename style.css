@@ -890,9 +890,13 @@ body {
   font-size: 1.08rem;
   font-weight: 500;
   letter-spacing: 0.18em;
-  line-height: 1.7;
   color: var(--color-text-primary);
-  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  line-height: 1.25;
+  margin-bottom: 1.15rem;
 }
 
 .families-amp {
@@ -901,8 +905,9 @@ body {
   font-style: italic;
   font-weight: 300;
   color: var(--color-gold-deep);
-  display: block;
-  margin: 0.15rem 0;
+  line-height: 1;
+  display: inline-block;
+  margin: 0;
 }
 
 .jazakallah-wrap {
