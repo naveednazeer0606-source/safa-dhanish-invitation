@@ -216,6 +216,32 @@ body {
   padding-bottom: 2rem;
 }
 
+/* Couple's Monogram Crest */
+.monogram-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -48px auto 1.4rem auto;
+  position: relative;
+  z-index: 5;
+}
+
+.monogram-img {
+  width: 98px;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  filter: drop-shadow(0 3px 10px rgba(109, 14, 25, 0.08));
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.6s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.monogram-img:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 6px 14px rgba(109, 14, 25, 0.14));
+}
+
 /* Arabic Bismillah */
 .bismillah-wrapper {
   margin-bottom: 2rem;
@@ -1114,5 +1140,12 @@ body {
   .venue-qr-image {
     width: 110px;
     height: 110px;
+  }
+  .monogram-img {
+    width: 82px;
+  }
+  .monogram-wrapper {
+    margin-top: -38px;
+    margin-bottom: 1.1rem;
   }
 }
