@@ -344,17 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isOpenerHandled || !invitationOpener) return;
     isOpenerHandled = true;
 
-    // Tactile depression on opener card
-    if (openerCard) {
-      openerCard.classList.add('is-pressed');
-    }
+    // Start measurements
+    const startRect = openerMonogramImg ? openerMonogramImg.getBoundingClientRect() : null;
+    const targetRect = heroMonogramImg ? heroMonogramImg.getBoundingClientRect() : null;
 
-    // Animate S and D Monogram: Pop, Zoom towards user, then glide into place
-    if (openerMonogramImg && heroMonogramImg) {
-      const startRect = openerMonogramImg.getBoundingClientRect();
-      const targetRect = heroMonogramImg.getBoundingClientRect();
-
-      // Create a smooth flying monogram clone
+    if (startRect && targetRect && openerMonogramImg) {
+      // Create flying clone
       const flyer = document.createElement('img');
       flyer.src = openerMonogramImg.src;
       flyer.alt = 'Safa & Dhanish Monogram';
@@ -367,43 +362,52 @@ document.addEventListener('DOMContentLoaded', () => {
       flyer.style.zIndex = '10005';
       flyer.style.pointerEvents = 'none';
       flyer.style.transformOrigin = 'center center';
-      flyer.style.willChange = 'transform, filter';
       document.body.appendChild(flyer);
 
       // Hide opener monogram and temporarily hide hero monogram
       openerMonogramImg.style.visibility = 'hidden';
       heroMonogramImg.style.visibility = 'hidden';
 
-      // Burst rich petals and sparkles from the popping logo
-      burstParticles(startRect.left + startRect.width / 2, startRect.top + startRect.height / 2, 16);
+      // Burst petals immediately on click
+      burstParticles(startRect.left + startRect.width / 2, startRect.top + startRect.height / 2, 12);
 
-      // STEP 1: Pop & Zoom in towards the viewer ("come towards me" effect)
-      requestAnimationFrame(() => {
-        flyer.style.transition = 'transform 0.44s cubic-bezier(0.18, 0.9, 0.32, 1.25), filter 0.44s ease';
-        flyer.style.transform = 'scale(1.58) translateY(-10px)';
-        flyer.style.filter = 'drop-shadow(0 22px 45px rgba(91, 2, 24, 0.55)) drop-shadow(0 0 25px rgba(223, 199, 148, 0.6))';
+      // Fade out opener smoothly in parallel
+      invitationOpener.classList.add('is-unfolding');
+
+      // Calculate translation and scale to reach hero target
+      const dx = targetRect.left - startRect.left;
+      const dy = targetRect.top - startRect.top;
+      const scaleX = targetRect.width / startRect.width;
+      const scaleY = targetRect.height / startRect.height;
+      const finalScale = (scaleX + scaleY) / 2;
+
+      // Continuous, fluid, hardware-accelerated Web Animations API sequence
+      const animation = flyer.animate([
+        {
+          transform: 'translate(0px, 0px) scale(1)',
+          filter: 'drop-shadow(0 4px 10px rgba(91, 2, 24, 0.2))',
+          offset: 0
+        },
+        {
+          // Pop and zoom towards the viewer
+          transform: 'translate(0px, -12px) scale(1.42)',
+          filter: 'drop-shadow(0 20px 40px rgba(91, 2, 24, 0.52)) drop-shadow(0 0 20px rgba(223, 199, 148, 0.55))',
+          offset: 0.32
+        },
+        {
+          // Seamless glide into exact hero position
+          transform: `translate(${dx}px, ${dy}px) scale(${finalScale})`,
+          filter: 'drop-shadow(0 4px 12px rgba(91, 2, 24, 0.2))',
+          offset: 1
+        }
+      ], {
+        duration: 900,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        fill: 'forwards'
       });
 
-      // Envelope background unseals and dissolves
-      setTimeout(() => {
-        invitationOpener.classList.add('is-unfolding');
-      }, 160);
-
-      // STEP 2: Glide and land smoothly into the exact hero section position
-      setTimeout(() => {
-        const currentTargetRect = heroMonogramImg.getBoundingClientRect();
-        const dx = currentTargetRect.left - startRect.left;
-        const dy = currentTargetRect.top - startRect.top;
-        const scaleX = currentTargetRect.width / startRect.width;
-        const scaleY = currentTargetRect.height / startRect.height;
-
-        flyer.style.transition = 'transform 0.74s cubic-bezier(0.22, 1, 0.36, 1), filter 0.74s ease';
-        flyer.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
-        flyer.style.filter = 'drop-shadow(0 4px 12px rgba(91, 2, 24, 0.22))';
-      }, 480);
-
-      // STEP 3: Landing complete -> Reveal hero section and clean up flyer
-      setTimeout(() => {
+      animation.onfinish = () => {
+        // Perfect cut: reveal real hero logo and cleanup flyer
         heroMonogramImg.style.visibility = 'visible';
         flyer.remove();
         invitationOpener.classList.add('is-hidden');
@@ -411,19 +415,17 @@ document.addEventListener('DOMContentLoaded', () => {
         invitationOpener.setAttribute('aria-hidden', 'true');
         burstParticles(targetRect.left + targetRect.width / 2, targetRect.top + targetRect.height / 2, 8);
         triggerHeroEntrance();
-      }, 1220);
+      };
 
     } else {
       // Fallback transition
-      setTimeout(() => {
-        invitationOpener.classList.add('is-unfolding');
-      }, 150);
+      invitationOpener.classList.add('is-unfolding');
       setTimeout(() => {
         invitationOpener.classList.add('is-hidden');
         invitationOpener.style.display = 'none';
         invitationOpener.setAttribute('aria-hidden', 'true');
         triggerHeroEntrance();
-      }, 1100);
+      }, 700);
     }
   }
 
