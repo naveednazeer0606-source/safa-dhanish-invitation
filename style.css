@@ -104,14 +104,66 @@ body.opener-active {
   z-index: 9998;
 }
 
-/* Flying Monogram Shared-Element Transition */
-.monogram-flyer {
+/* Flying Monogram Shared-Element 3D Motion Graphic Transition */
+.monogram-flyer-wrap {
   position: fixed;
   z-index: 10005;
   pointer-events: none;
+  transform-origin: center center;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.monogram-flyer {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: contain;
   transform-origin: center center;
   will-change: transform, filter;
+  backface-visibility: visible;
+}
+
+/* Calligraphic Motion Graphic Ribbon Swirls */
+.motion-swirl-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250%;
+  height: 250%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: -1;
+}
+
+.swirl-ribbon-1 {
+  stroke-dasharray: 450;
+  stroke-dashoffset: 450;
+  animation: ribbonDraw 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  filter: drop-shadow(0 0 10px rgba(223, 199, 148, 0.7));
+}
+
+.swirl-ribbon-2 {
+  stroke-dasharray: 450;
+  stroke-dashoffset: -450;
+  animation: ribbonDrawReverse 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  filter: drop-shadow(0 0 10px rgba(194, 77, 98, 0.7));
+}
+
+@keyframes ribbonDraw {
+  0% { stroke-dashoffset: 450; opacity: 0; }
+  18% { opacity: 1; }
+  75% { opacity: 0.9; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes ribbonDrawReverse {
+  0% { stroke-dashoffset: -450; opacity: 0; }
+  18% { opacity: 1; }
+  75% { opacity: 0.85; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
 }
 
 /* ==========================================================================
