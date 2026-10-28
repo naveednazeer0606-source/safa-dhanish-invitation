@@ -341,8 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function openInvitation() {
-    if (isOpenerHandled || !invitationOpener) return;
-    isOpenerHandled = true;
+    if (!invitationOpener) return;
 
     // Start measurements BEFORE modifying any layout or classes
     const startRect = openerMonogramImg ? openerMonogramImg.getBoundingClientRect() : null;
@@ -520,12 +519,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function startUnsealingProcess() {
+    if (isOpenerHandled || !invitationOpener) return;
+    isOpenerHandled = true;
+
+    // 1. Tactile feedback on card
+    if (openerCard) {
+      openerCard.classList.add('is-pressed');
+    }
+
+    // 2. Start realistic red silk ribbon unfolding & unlocking animation across the card
+    invitationOpener.classList.add('is-unsealing-ribbon');
+
+    // Burst petals and stardust from wax seal / ribbon center
+    const sealEl = document.getElementById('waxSeal');
+    if (sealEl) {
+      const sealRect = sealEl.getBoundingClientRect();
+      burstParticles(sealRect.left + sealRect.width / 2, sealRect.top + sealRect.height / 2, 16);
+    }
+
+    // Secondary ribbon peeling sparkles as ribbon unrolls left and right
+    setTimeout(() => {
+      if (sealEl) {
+        const sealRect = sealEl.getBoundingClientRect();
+        burstParticles(sealRect.left - 45, sealRect.top + sealRect.height / 2, 5);
+        burstParticles(sealRect.right + 45, sealRect.top + sealRect.height / 2, 5);
+      }
+    }, 450);
+
+    setTimeout(() => {
+      if (sealEl) {
+        const sealRect = sealEl.getBoundingClientRect();
+        burstParticles(sealRect.left - 90, sealRect.top + sealRect.height / 2, 4);
+        burstParticles(sealRect.right + 90, sealRect.top + sealRect.height / 2, 4);
+      }
+    }, 850);
+
+    // 3. ONLY THEN (after ribbon has completely unfolded & unlocked over 1.35s), launch the S&D logo flight & website opening!
+    setTimeout(() => {
+      openInvitation();
+    }, 1350);
+  }
+
   if (openerCard) {
-    openerCard.addEventListener('click', openInvitation);
+    openerCard.addEventListener('click', startUnsealingProcess);
     openerCard.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openInvitation();
+        startUnsealingProcess();
       }
     });
   } else {
