@@ -531,34 +531,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Start realistic red silk ribbon unfolding & unlocking animation across the card
     invitationOpener.classList.add('is-unsealing-ribbon');
 
-    // Burst petals and stardust from wax seal / ribbon center
-    const sealEl = document.getElementById('waxSeal');
-    if (sealEl) {
-      const sealRect = sealEl.getBoundingClientRect();
-      burstParticles(sealRect.left + sealRect.width / 2, sealRect.top + sealRect.height / 2, 16);
+    // Burst petals and stardust from ribbon knot center as knot comes undone
+    const knotEl = document.getElementById('bowKnot') || document.getElementById('ribbonBowAssembly');
+    if (knotEl) {
+      const knotRect = knotEl.getBoundingClientRect();
+      const knotCenterX = knotRect.left + knotRect.width * 0.5;
+      const knotCenterY = knotRect.top + knotRect.height * 0.28;
+      burstParticles(knotCenterX, knotCenterY, 18);
     }
 
-    // Secondary ribbon peeling sparkles as ribbon unrolls left and right
+    // Secondary ribbon peeling sparkles as knot slips and strings slide left & right
     setTimeout(() => {
-      if (sealEl) {
-        const sealRect = sealEl.getBoundingClientRect();
-        burstParticles(sealRect.left - 45, sealRect.top + sealRect.height / 2, 5);
-        burstParticles(sealRect.right + 45, sealRect.top + sealRect.height / 2, 5);
+      if (knotEl) {
+        const knotRect = knotEl.getBoundingClientRect();
+        const knotCenterY = knotRect.top + knotRect.height * 0.28;
+        burstParticles(knotRect.left - 60, knotCenterY, 6);
+        burstParticles(knotRect.right + 60, knotCenterY, 6);
       }
-    }, 450);
+    }, 420);
 
     setTimeout(() => {
-      if (sealEl) {
-        const sealRect = sealEl.getBoundingClientRect();
-        burstParticles(sealRect.left - 90, sealRect.top + sealRect.height / 2, 4);
-        burstParticles(sealRect.right + 90, sealRect.top + sealRect.height / 2, 4);
+      if (knotEl) {
+        const knotRect = knotEl.getBoundingClientRect();
+        const knotCenterY = knotRect.top + knotRect.height * 0.28;
+        burstParticles(knotRect.left - 120, knotCenterY, 5);
+        burstParticles(knotRect.right + 120, knotCenterY, 5);
       }
     }, 850);
 
-    // 3. ONLY THEN (after ribbon has completely unfolded & unlocked over 1.35s), launch the S&D logo flight & website opening!
+    // 3. ONLY THEN (after ribbon has completely unfolded & unlocked over ~1.4s), launch the S&D logo flight & website opening!
     setTimeout(() => {
       openInvitation();
-    }, 1350);
+    }, 1400);
   }
 
   if (openerCard) {
