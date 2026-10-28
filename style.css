@@ -74,6 +74,10 @@ body {
   position: relative;
 }
 
+body.opener-active {
+  overflow: hidden;
+}
+
 /* ==========================================================================
    DESKTOP MATTE & TABLETOP AMBIENCE
    Soft, warm ivory surface with subtle natural depth and breathing space

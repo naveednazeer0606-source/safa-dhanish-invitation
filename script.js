@@ -344,12 +344,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isOpenerHandled || !invitationOpener) return;
     isOpenerHandled = true;
 
-    // Start measurements
+    // Start measurements BEFORE modifying any layout or classes
     const startRect = openerMonogramImg ? openerMonogramImg.getBoundingClientRect() : null;
     const targetRect = heroMonogramImg ? heroMonogramImg.getBoundingClientRect() : null;
 
     if (startRect && targetRect && openerMonogramImg) {
-      // Create flying clone
+      // Calculate exact center coordinates to guarantee 0.0px landing alignment
+      const startCenterX = startRect.left + startRect.width / 2;
+      const startCenterY = startRect.top + startRect.height / 2;
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+
+      const totalDx = targetCenterX - startCenterX;
+      const totalDy = targetCenterY - startCenterY;
+      const targetScale = targetRect.width / startRect.width;
+
+      // Create flying clone placed at exact startRect
       const flyer = document.createElement('img');
       flyer.src = openerMonogramImg.src;
       flyer.alt = 'Safa & Dhanish Monogram';
@@ -364,24 +374,17 @@ document.addEventListener('DOMContentLoaded', () => {
       flyer.style.transformOrigin = 'center center';
       document.body.appendChild(flyer);
 
-      // Hide opener monogram and temporarily hide hero monogram
+      // Hide opener monogram and keep hero monogram ready
       openerMonogramImg.style.visibility = 'hidden';
       heroMonogramImg.style.visibility = 'hidden';
 
-      // Burst petals immediately on click
-      burstParticles(startRect.left + startRect.width / 2, startRect.top + startRect.height / 2, 12);
+      // Burst petals from center
+      burstParticles(startCenterX, startCenterY, 14);
 
-      // Fade out opener smoothly in parallel
+      // Fade out opener backdrop smoothly in parallel
       invitationOpener.classList.add('is-unfolding');
 
-      // Calculate translation and scale to reach hero target
-      const dx = targetRect.left - startRect.left;
-      const dy = targetRect.top - startRect.top;
-      const scaleX = targetRect.width / startRect.width;
-      const scaleY = targetRect.height / startRect.height;
-      const finalScale = (scaleX + scaleY) / 2;
-
-      // Continuous, fluid, hardware-accelerated Web Animations API sequence
+      // Continuous fluid flight directly along the vertical axis into target
       const animation = flyer.animate([
         {
           transform: 'translate(0px, 0px) scale(1)',
@@ -390,30 +393,39 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           // Pop and zoom towards the viewer
-          transform: 'translate(0px, -12px) scale(1.42)',
-          filter: 'drop-shadow(0 20px 40px rgba(91, 2, 24, 0.52)) drop-shadow(0 0 20px rgba(223, 199, 148, 0.55))',
-          offset: 0.32
+          transform: `translate(${totalDx * 0.15}px, ${totalDy * 0.08 - 14}px) scale(1.38)`,
+          filter: 'drop-shadow(0 22px 42px rgba(91, 2, 24, 0.52)) drop-shadow(0 0 22px rgba(223, 199, 148, 0.6))',
+          offset: 0.28
         },
         {
-          // Seamless glide into exact hero position
-          transform: `translate(${dx}px, ${dy}px) scale(${finalScale})`,
-          filter: 'drop-shadow(0 4px 12px rgba(91, 2, 24, 0.2))',
+          // Smooth glide into target
+          transform: `translate(${totalDx * 0.75}px, ${totalDy * 0.75}px) scale(${1 + (targetScale - 1) * 0.75})`,
+          filter: 'drop-shadow(0 6px 16px rgba(91, 2, 24, 0.25))',
+          offset: 0.78
+        },
+        {
+          // 100% exact pixel match landing in hero location
+          transform: `translate(${totalDx}px, ${totalDy}px) scale(${targetScale})`,
+          filter: 'drop-shadow(0 3px 10px rgba(109, 14, 25, 0.08))',
           offset: 1
         }
       ], {
-        duration: 900,
-        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        duration: 880,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
         fill: 'forwards'
       });
 
       animation.onfinish = () => {
-        // Perfect cut: reveal real hero logo and cleanup flyer
+        // Perfect cut: seamlessly reveal real hero logo and cleanup flyer
         heroMonogramImg.style.visibility = 'visible';
-        flyer.remove();
+        requestAnimationFrame(() => {
+          flyer.remove();
+        });
         invitationOpener.classList.add('is-hidden');
         invitationOpener.style.display = 'none';
         invitationOpener.setAttribute('aria-hidden', 'true');
-        burstParticles(targetRect.left + targetRect.width / 2, targetRect.top + targetRect.height / 2, 8);
+        document.body.classList.remove('opener-active');
+        burstParticles(targetCenterX, targetCenterY, 8);
         triggerHeroEntrance();
       };
 
@@ -424,6 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
         invitationOpener.classList.add('is-hidden');
         invitationOpener.style.display = 'none';
         invitationOpener.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('opener-active');
         triggerHeroEntrance();
       }, 700);
     }
