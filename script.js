@@ -90,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     addToCalendarBtn.addEventListener('click', (e) => {
       e.preventDefault();
 
-      // Event Details: Sunday, 10 January 2027, 11:00 AM - 12:30 PM IST (UTC+05:30)
-      // 11:00 AM IST = 05:30 UTC
-      // 12:30 PM IST = 07:00 UTC
+      // Event Details: Sunday, 10 January 2027, 10:45 AM - 11:30 AM IST (UTC+05:30)
+      // 10:45 AM IST = 05:15 UTC
+      // 11:30 AM IST = 06:00 UTC
       const eventTitle = "Nikah Ceremony: Safa & Dhanish Ahmed";
       const eventLocation = "St. Michael Community Hall, Valanar Street, Vedha Nagar, Nagercoil";
       const eventDescription = "Blessed Nikah ceremony of Safa (Daughter of Mr. Kaja Mohideen & Mrs. Aneez Banu) and Dhanish Ahmed (Son of Mr. Mohamed Fakrudeen & Mrs. Sulbath). Venue: https://maps.app.goo.gl/hXpbcaUwu97LtgK59";
@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
         "BEGIN:VEVENT",
-        "UID:nikah-safa-dhanish-20270110T053000Z",
+        "UID:nikah-safa-dhanish-20270110T051500Z",
         "DTSTAMP:20261026T000000Z",
-        "DTSTART:20270110T053000Z",
-        "DTEND:20270110T070000Z",
+        "DTSTART:20270110T051500Z",
+        "DTEND:20270110T060000Z",
         `SUMMARY:${eventTitle}`,
         `DESCRIPTION:${eventDescription}`,
         `LOCATION:${eventLocation}`,

@@ -845,7 +845,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.2rem;
 }
 
 .closing-crest .gold-line {
@@ -858,18 +858,8 @@ body {
   color: var(--color-gold);
 }
 
-.closing-quote {
-  font-family: var(--font-serif-display);
-  font-size: 1.25rem;
-  font-style: italic;
-  line-height: 1.65;
-  color: var(--color-text-primary);
-  margin-bottom: 2rem;
-  padding: 0 0.5rem;
-}
-
 .closing-signoff {
-  margin-top: 1.2rem;
+  margin-top: 0;
   padding: 1.6rem 1.2rem;
   background: rgba(255, 255, 255, 0.42);
   border-radius: 4px;
