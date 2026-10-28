@@ -1,7 +1,11 @@
 /**
  * SAFA & DHANISH AHMED — NIKAH WEDDING INVITATION
- * Elegant Interactive Experience: Invitation Opener, Romantic Canvas Drizzle,
- * Scroll Reveals, Ambient Parallax, & iCalendar Support
+ * Elegant Interactive Script:
+ * 1. Monogram 3D Pop, Zoom-in & Glide to Hero Landing Position
+ * 2. Rich, Highly-Visible Romantic Petal, Heart, Star & Leaf Canvas System
+ * 3. Finger Hold & Touch Responsive Shower
+ * 4. IntersectionObserver Scroll Reveals & Parallax
+ * 5. iCalendar (.ics) Support
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,114 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('js-enabled');
 
   // ========================================================================
-  // 1. INVITATION OPENER & UNSEALING SEQUENCE
-  // ========================================================================
-  const invitationOpener = document.getElementById('invitationOpener');
-  const openerCard = document.getElementById('openerCard');
-  let isOpenerHandled = false;
-
-  function triggerHeroEntrance() {
-    const heroItems = document.querySelectorAll('#hero .reveal-item');
-    heroItems.forEach((el, index) => {
-      setTimeout(() => {
-        el.classList.add('revealed');
-      }, 100 + index * 180);
-    });
-  }
-
-  function openInvitation() {
-    if (isOpenerHandled || !invitationOpener) return;
-    isOpenerHandled = true;
-
-    // Tactile depression response
-    if (openerCard) {
-      openerCard.classList.add('is-pressed');
-    }
-
-    // Outer card unseals and gently lifts/unfolds
-    setTimeout(() => {
-      invitationOpener.classList.add('is-unfolding');
-    }, 150);
-
-    // Smooth dissolve into the main luxury invitation
-    setTimeout(() => {
-      invitationOpener.classList.add('is-hidden');
-      invitationOpener.style.display = 'none';
-      invitationOpener.setAttribute('aria-hidden', 'true');
-      triggerHeroEntrance();
-    }, 1100);
-  }
-
-  if (openerCard) {
-    openerCard.addEventListener('click', openInvitation);
-    openerCard.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openInvitation();
-      }
-    });
-  } else {
-    // Fallback if opener is not in DOM
-    triggerHeroEntrance();
-  }
-
-  // ========================================================================
-  // 2. SCROLL REVEAL (IntersectionObserver)
-  // ========================================================================
-  const revealElements = document.querySelectorAll('.reveal-item');
-
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      root: null,
-      rootMargin: '40px 0px 0px 0px',
-      threshold: 0.05
-    });
-
-    revealElements.forEach(el => {
-      // Hero elements are handled separately on opener transition
-      if (!el.closest('#hero')) {
-        revealObserver.observe(el);
-      }
-    });
-  } else {
-    revealElements.forEach(el => el.classList.add('revealed'));
-  }
-
-  // ========================================================================
-  // 3. SUBTLE FLORAL PARALLAX ON SCROLL
-  // ========================================================================
-  const floralTopImg = document.querySelector('.floral-top-img');
-  const romanticBgFloralImg = document.querySelector('.romantic-bg-floral-img');
-  let ticking = false;
-
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const scrolled = window.pageYOffset || document.documentElement.scrollTop;
-        if (floralTopImg && scrolled < 450) {
-          floralTopImg.style.transform = `translateY(${scrolled * 0.08}px) scale(1.02)`;
-        }
-        if (romanticBgFloralImg && scrolled < 1800) {
-          romanticBgFloralImg.style.transform = `scale(1) translateY(${scrolled * 0.03}px)`;
-        }
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-
-  // ========================================================================
-  // 4. ROMANTIC FLOWER PETAL + HEART CANVAS DRIZZLE
+  // 1. RICH ROMANTIC CANVAS PARTICLE SYSTEM (Petals, Hearts, Stars & Leaves)
+  // Highly visible, rich colors, finger-hold responsive stream
   // ========================================================================
   const canvas = document.getElementById('particleCanvas');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let burstParticles = () => {};
+  let addStreamParticles = () => {};
 
   if (canvas && canvas.getContext && !prefersReducedMotion) {
     const ctx = canvas.getContext('2d');
@@ -137,111 +41,160 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvas, { passive: true });
 
     const isMobile = window.innerWidth < 768;
-    const MAX_PARTICLES = isMobile ? 14 : 26;
+    const MAX_PARTICLES = isMobile ? 55 : 90;
     const particles = [];
     let animationFrameId = null;
     let isRunning = false;
 
-    // Curated romantic wedding palette
-    const colors = [
-      { r: 232, g: 200, b: 203 }, // Soft blush pink
-      { r: 249, g: 236, b: 238 }, // Very pale blush
-      { r: 194, g: 142, b: 149 }, // Muted rose
-      { r: 253, g: 251, b: 247 }, // Pale cream / ivory
-      { r: 109, g: 14, b: 25 },   // Velvet burgundy
-      { r: 197, g: 160, b: 89 }   // Champagne gold
+    // Rich wedding color palette matching the new deep metallic burgundy monogram
+    const palette = [
+      { r: 91, g: 2, b: 24, name: 'burgundy' },     // Deep Velvet Wine Burgundy (#5B0218)
+      { r: 109, g: 14, b: 25, name: 'burgundy' },   // Rich Velvet Maroon (#6D0E19)
+      { r: 194, g: 77, b: 98, name: 'rose' },       // Vibrant Romantic Rose (#C24D62)
+      { r: 224, g: 138, b: 152, name: 'blush' },    // Soft Warm Blush (#E08A98)
+      { r: 212, g: 175, b: 55, name: 'gold' },      // Radiant Champagne Gold (#D4AF37)
+      { r: 223, g: 199, b: 148, name: 'gold' },     // Pale Shimmering Gold (#DFC794)
+      { r: 107, g: 142, b: 107, name: 'leaf' },     // Sage Foliage Leaf Green (#6B8E6B)
+      { r: 86, g: 115, b: 86, name: 'leaf' }        // Deep Eucalyptus Olive Green (#567356)
     ];
 
-    class RomanticParticle {
-      constructor(x, y) {
-        this.x = x + (Math.random() - 0.5) * 12;
-        this.y = y + (Math.random() - 0.5) * 12;
-        // Soft downward drift
-        this.vy = 0.55 + Math.random() * 0.75;
-        this.swayPhase = Math.random() * Math.PI * 2;
-        this.swaySpeed = 0.02 + Math.random() * 0.025;
-        this.swayAmp = 0.45 + Math.random() * 0.7;
-        
-        this.rotation = Math.random() * Math.PI * 2;
-        this.rotSpeed = (Math.random() - 0.5) * 0.025;
+    class HighlyVisibleParticle {
+      constructor(x, y, isBurst = false) {
+        this.x = x + (Math.random() - 0.5) * (isBurst ? 28 : 16);
+        this.y = y + (Math.random() - 0.5) * (isBurst ? 28 : 16);
 
-        // Particle types: 60% petal, 25% heart, 15% stardust speck
-        const roll = Math.random();
-        if (roll < 0.60) {
-          this.type = 'petal';
-          this.size = 6 + Math.random() * 5; // 6-11px
-        } else if (roll < 0.85) {
-          this.type = 'heart';
-          this.size = 5 + Math.random() * 4; // 5-9px
+        // Velocity: bursts radiate slightly outwards; normal particles drift gently downward
+        if (isBurst) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1.2 + Math.random() * 2.8;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed - 0.8;
         } else {
-          this.type = 'stardust';
-          this.size = 2.5 + Math.random() * 2; // 2.5-4.5px
+          this.vx = (Math.random() - 0.5) * 1.2;
+          this.vy = 0.85 + Math.random() * 1.35;
         }
 
-        const c = colors[Math.floor(Math.random() * colors.length)];
-        this.r = c.r;
-        this.g = c.g;
-        this.b = c.b;
+        // Sinusoidal horizontal sway & 3D flutter
+        this.swayPhase = Math.random() * Math.PI * 2;
+        this.swaySpeed = 0.025 + Math.random() * 0.035;
+        this.swayAmp = 0.65 + Math.random() * 0.95;
+
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.04;
+
+        // Particle types:
+        // 45% Rose Petal, 25% Romantic Heart, 18% Glowing Star, 12% Greenery Leaf
+        const roll = Math.random();
+        if (roll < 0.45) {
+          this.type = 'petal';
+          this.size = 12 + Math.random() * 9; // 12px - 21px (large and clearly visible!)
+          // Pick burgundy, rose or blush
+          const c = palette[Math.floor(Math.random() * 4)];
+          this.r = c.r; this.g = c.g; this.b = c.b;
+        } else if (roll < 0.70) {
+          this.type = 'heart';
+          this.size = 10 + Math.random() * 6; // 10px - 16px
+          const c = palette[Math.floor(Math.random() * 4)];
+          this.r = c.r; this.g = c.g; this.b = c.b;
+        } else if (roll < 0.88) {
+          this.type = 'star';
+          this.size = 5 + Math.random() * 4; // 5px - 9px
+          const c = palette[4 + Math.floor(Math.random() * 2)]; // Gold
+          this.r = c.r; this.g = c.g; this.b = c.b;
+        } else {
+          this.type = 'leaf';
+          this.size = 10 + Math.random() * 5; // 10px - 15px
+          const c = palette[6 + Math.floor(Math.random() * 2)]; // Green foliage
+          this.r = c.r; this.g = c.g; this.b = c.b;
+        }
 
         this.life = 0;
-        this.maxLife = 120 + Math.floor(Math.random() * 80); // ~2.5 - 4.5 seconds
-        this.maxAlpha = this.type === 'stardust' ? 0.75 : (0.42 + Math.random() * 0.28);
+        this.maxLife = 110 + Math.floor(Math.random() * 70); // ~2.2 - 3.4 seconds
+        this.maxAlpha = 0.88 + Math.random() * 0.12; // Highly visible (0.88 - 1.0)
       }
 
       update() {
         this.life++;
+        // Downward drift with drag
         this.y += this.vy;
+        this.x += this.vx;
+        this.vx *= 0.985;
+        if (this.vy < 1.1) this.vy += 0.035;
+
         this.swayPhase += this.swaySpeed;
         this.x += Math.sin(this.swayPhase) * this.swayAmp;
         this.rotation += this.rotSpeed;
 
-        return this.life < this.maxLife && this.y < height + 30;
+        return this.life < this.maxLife && this.y < height + 40;
       }
 
       draw(c) {
         const progress = this.life / this.maxLife;
         let alpha = this.maxAlpha;
-        if (progress < 0.15) {
-          alpha = (progress / 0.15) * this.maxAlpha;
-        } else {
-          alpha = (1 - (progress - 0.15) / 0.85) * this.maxAlpha;
+        if (progress < 0.12) {
+          alpha = (progress / 0.12) * this.maxAlpha;
+        } else if (progress > 0.70) {
+          alpha = (1 - (progress - 0.70) / 0.30) * this.maxAlpha;
         }
-        if (alpha <= 0.001) return;
+        if (alpha <= 0.005) return;
 
         c.save();
         c.translate(this.x, this.y);
         c.rotate(this.rotation);
 
         c.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${alpha.toFixed(3)})`;
+        c.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${(alpha * 0.4).toFixed(3)})`;
 
         if (this.type === 'petal') {
-          // Organic curved petal with natural 3D flutter
+          // 3D flutter: horizontal oscillation mimics turning in air
           const flutter = Math.cos(this.swayPhase);
           c.scale(flutter * 0.9, 1);
           c.beginPath();
           c.moveTo(0, -this.size);
-          c.bezierCurveTo(this.size * 0.8, -this.size * 0.5, this.size * 0.9, this.size * 0.5, 0, this.size);
-          c.bezierCurveTo(-this.size * 0.9, this.size * 0.5, -this.size * 0.8, -this.size * 0.5, 0, -this.size);
+          c.bezierCurveTo(this.size * 0.85, -this.size * 0.4, this.size * 0.9, this.size * 0.4, 0, this.size);
+          c.bezierCurveTo(-this.size * 0.9, this.size * 0.4, -this.size * 0.85, -this.size * 0.4, 0, -this.size);
           c.fill();
-        } else if (this.type === 'heart') {
-          // Delicate subtle heart shape
-          const s = this.size * 0.65;
+
+          // Subtle center vein highlight
           c.beginPath();
-          c.moveTo(0, s * 0.3);
+          c.moveTo(0, -this.size * 0.65);
+          c.lineTo(0, this.size * 0.65);
+          c.lineWidth = 1;
+          c.stroke();
+
+        } else if (this.type === 'heart') {
+          // Crisp, romantic heart shape
+          const s = this.size * 0.62;
+          c.beginPath();
+          c.moveTo(0, s * 0.35);
           c.bezierCurveTo(0, 0, -s, 0, -s, s * 0.55);
-          c.bezierCurveTo(-s, s * 1.15, 0, s * 1.5, 0, s * 1.8);
-          c.bezierCurveTo(0, s * 1.5, s, s * 1.15, s, s * 0.55);
-          c.bezierCurveTo(s, 0, 0, 0, 0, s * 0.3);
+          c.bezierCurveTo(-s, s * 1.15, 0, s * 1.55, 0, s * 1.85);
+          c.bezierCurveTo(0, s * 1.55, s, s * 1.15, s, s * 0.55);
+          c.bezierCurveTo(s, 0, 0, 0, 0, s * 0.35);
           c.fill();
-        } else {
-          // Tiny stardust diamond
+
+        } else if (this.type === 'star') {
+          // 4-pointed radiant champagne gold diamond star
+          const s = this.size;
+          c.beginPath();
+          c.moveTo(0, -s * 1.2);
+          c.lineTo(s * 0.3, -s * 0.3);
+          c.lineTo(s * 1.2, 0);
+          c.lineTo(s * 0.3, s * 0.3);
+          c.lineTo(0, s * 1.2);
+          c.lineTo(-s * 0.3, s * 0.3);
+          c.lineTo(-s * 1.2, 0);
+          c.lineTo(-s * 0.3, -s * 0.3);
+          c.closePath();
+          c.fill();
+
+        } else if (this.type === 'leaf') {
+          // Foliage eucalyptus leaf
           const s = this.size;
           c.beginPath();
           c.moveTo(0, -s);
-          c.lineTo(s * 0.35, 0);
-          c.lineTo(0, s);
-          c.lineTo(-s * 0.35, 0);
-          c.closePath();
+          c.bezierCurveTo(s * 0.55, -s * 0.4, s * 0.55, s * 0.4, 0, s);
+          c.bezierCurveTo(-s * 0.55, s * 0.4, -s * 0.55, -s * 0.4, 0, -s);
           c.fill();
         }
 
@@ -249,15 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function addParticles(x, y, count = 1) {
-      if (particles.length >= MAX_PARTICLES) return;
+    burstParticles = function(x, y, count = 10) {
       for (let i = 0; i < count; i++) {
         if (particles.length < MAX_PARTICLES) {
-          particles.push(new RomanticParticle(x, y));
+          particles.push(new HighlyVisibleParticle(x, y, true));
         }
       }
       startLoop();
-    }
+    };
+
+    addStreamParticles = function(x, y, count = 2) {
+      for (let i = 0; i < count; i++) {
+        if (particles.length < MAX_PARTICLES) {
+          particles.push(new HighlyVisibleParticle(x, y, false));
+        }
+      }
+      startLoop();
+    };
 
     function loop() {
       ctx.clearRect(0, 0, width, height);
@@ -287,38 +248,247 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Desktop Pointer Movement (throttled soft romantic drizzle)
-    let lastPointerTime = 0;
-    let lastPointerX = 0;
-    let lastPointerY = 0;
+    // ======================================================================
+    // FINGER HOLD & POINTER TRACKING
+    // Continuous flow whenever user keeps their finger or mouse on screen
+    // ======================================================================
+    let isHoldingPointer = false;
+    let holdCoords = { x: 0, y: 0 };
+    let holdStreamInterval = null;
+
+    function startHolding(x, y) {
+      isHoldingPointer = true;
+      holdCoords.x = x;
+      holdCoords.y = y;
+      // Immediate burst on press
+      burstParticles(x, y, 7);
+
+      // Continuous stream while holding finger down
+      if (!holdStreamInterval) {
+        holdStreamInterval = setInterval(() => {
+          if (isHoldingPointer) {
+            addStreamParticles(holdCoords.x, holdCoords.y, 2);
+          }
+        }, 55);
+      }
+    }
+
+    function updateHolding(x, y) {
+      holdCoords.x = x;
+      holdCoords.y = y;
+      addStreamParticles(x, y, 2);
+    }
+
+    function stopHolding() {
+      isHoldingPointer = false;
+      if (holdStreamInterval) {
+        clearInterval(holdStreamInterval);
+        holdStreamInterval = null;
+      }
+    }
+
+    // Desktop pointer / mouse listeners
+    window.addEventListener('pointerdown', (e) => {
+      startHolding(e.clientX, e.clientY);
+    }, { passive: true });
 
     window.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'touch') return;
-      const now = performance.now();
-      const dx = e.clientX - lastPointerX;
-      const dy = e.clientY - lastPointerY;
-      const dist = Math.hypot(dx, dy);
-
-      if (now - lastPointerTime > 75 && dist > 12) {
-        lastPointerTime = now;
-        lastPointerX = e.clientX;
-        lastPointerY = e.clientY;
-        addParticles(e.clientX, e.clientY, 1);
+      if (e.pointerType === 'touch') return; // Handled by touch events
+      if (isHoldingPointer) {
+        updateHolding(e.clientX, e.clientY);
+      } else {
+        // Hover movement generates visible trail
+        addStreamParticles(e.clientX, e.clientY, 1);
       }
     }, { passive: true });
 
-    // Mobile Touch Interaction (throttled, silky smooth, non-blocking)
-    let lastTouchTime = 0;
+    window.addEventListener('pointerup', stopHolding, { passive: true });
+    window.addEventListener('pointercancel', stopHolding, { passive: true });
+
+    // Mobile touch listeners (passive, non-blocking, highly interactive)
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        startHolding(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
     window.addEventListener('touchmove', (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      const now = performance.now();
-      if (now - lastTouchTime > 95) {
-        lastTouchTime = now;
-        const touch = e.touches[0];
-        addParticles(touch.clientX, touch.clientY, 1);
+      if (e.touches && e.touches.length > 0) {
+        updateHolding(e.touches[0].clientX, e.touches[0].clientY);
       }
     }, { passive: true });
+
+    window.addEventListener('touchend', stopHolding, { passive: true });
+    window.addEventListener('touchcancel', stopHolding, { passive: true });
   }
+
+  // ========================================================================
+  // 2. INVITATION OPENER WITH MONOGRAM POP, ZOOM-IN & GLIDE ANIMATION
+  // ========================================================================
+  const invitationOpener = document.getElementById('invitationOpener');
+  const openerCard = document.getElementById('openerCard');
+  const openerMonogramImg = document.getElementById('openerMonogramImg');
+  const heroMonogramImg = document.getElementById('heroMonogramImg');
+  let isOpenerHandled = false;
+
+  function triggerHeroEntrance() {
+    const heroItems = document.querySelectorAll('#hero .reveal-item');
+    heroItems.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.add('revealed');
+      }, 80 + index * 160);
+    });
+  }
+
+  function openInvitation() {
+    if (isOpenerHandled || !invitationOpener) return;
+    isOpenerHandled = true;
+
+    // Tactile depression on opener card
+    if (openerCard) {
+      openerCard.classList.add('is-pressed');
+    }
+
+    // Animate S and D Monogram: Pop, Zoom towards user, then glide into place
+    if (openerMonogramImg && heroMonogramImg) {
+      const startRect = openerMonogramImg.getBoundingClientRect();
+      const targetRect = heroMonogramImg.getBoundingClientRect();
+
+      // Create a smooth flying monogram clone
+      const flyer = document.createElement('img');
+      flyer.src = openerMonogramImg.src;
+      flyer.alt = 'Safa & Dhanish Monogram';
+      flyer.className = 'monogram-flyer';
+      flyer.style.position = 'fixed';
+      flyer.style.left = `${startRect.left}px`;
+      flyer.style.top = `${startRect.top}px`;
+      flyer.style.width = `${startRect.width}px`;
+      flyer.style.height = `${startRect.height}px`;
+      flyer.style.zIndex = '10005';
+      flyer.style.pointerEvents = 'none';
+      flyer.style.transformOrigin = 'center center';
+      flyer.style.willChange = 'transform, filter';
+      document.body.appendChild(flyer);
+
+      // Hide opener monogram and temporarily hide hero monogram
+      openerMonogramImg.style.visibility = 'hidden';
+      heroMonogramImg.style.visibility = 'hidden';
+
+      // Burst rich petals and sparkles from the popping logo
+      burstParticles(startRect.left + startRect.width / 2, startRect.top + startRect.height / 2, 16);
+
+      // STEP 1: Pop & Zoom in towards the viewer ("come towards me" effect)
+      requestAnimationFrame(() => {
+        flyer.style.transition = 'transform 0.44s cubic-bezier(0.18, 0.9, 0.32, 1.25), filter 0.44s ease';
+        flyer.style.transform = 'scale(1.58) translateY(-10px)';
+        flyer.style.filter = 'drop-shadow(0 22px 45px rgba(91, 2, 24, 0.55)) drop-shadow(0 0 25px rgba(223, 199, 148, 0.6))';
+      });
+
+      // Envelope background unseals and dissolves
+      setTimeout(() => {
+        invitationOpener.classList.add('is-unfolding');
+      }, 160);
+
+      // STEP 2: Glide and land smoothly into the exact hero section position
+      setTimeout(() => {
+        const currentTargetRect = heroMonogramImg.getBoundingClientRect();
+        const dx = currentTargetRect.left - startRect.left;
+        const dy = currentTargetRect.top - startRect.top;
+        const scaleX = currentTargetRect.width / startRect.width;
+        const scaleY = currentTargetRect.height / startRect.height;
+
+        flyer.style.transition = 'transform 0.74s cubic-bezier(0.22, 1, 0.36, 1), filter 0.74s ease';
+        flyer.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+        flyer.style.filter = 'drop-shadow(0 4px 12px rgba(91, 2, 24, 0.22))';
+      }, 480);
+
+      // STEP 3: Landing complete -> Reveal hero section and clean up flyer
+      setTimeout(() => {
+        heroMonogramImg.style.visibility = 'visible';
+        flyer.remove();
+        invitationOpener.classList.add('is-hidden');
+        invitationOpener.style.display = 'none';
+        invitationOpener.setAttribute('aria-hidden', 'true');
+        burstParticles(targetRect.left + targetRect.width / 2, targetRect.top + targetRect.height / 2, 8);
+        triggerHeroEntrance();
+      }, 1220);
+
+    } else {
+      // Fallback transition
+      setTimeout(() => {
+        invitationOpener.classList.add('is-unfolding');
+      }, 150);
+      setTimeout(() => {
+        invitationOpener.classList.add('is-hidden');
+        invitationOpener.style.display = 'none';
+        invitationOpener.setAttribute('aria-hidden', 'true');
+        triggerHeroEntrance();
+      }, 1100);
+    }
+  }
+
+  if (openerCard) {
+    openerCard.addEventListener('click', openInvitation);
+    openerCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openInvitation();
+      }
+    });
+  } else {
+    triggerHeroEntrance();
+  }
+
+  // ========================================================================
+  // 3. SCROLL REVEALS (IntersectionObserver)
+  // ========================================================================
+  const revealElements = document.querySelectorAll('.reveal-item');
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '40px 0px 0px 0px',
+      threshold: 0.05
+    });
+
+    revealElements.forEach(el => {
+      if (!el.closest('#hero')) {
+        revealObserver.observe(el);
+      }
+    });
+  } else {
+    revealElements.forEach(el => el.classList.add('revealed'));
+  }
+
+  // ========================================================================
+  // 4. SUBTLE FLORAL PARALLAX ON SCROLL
+  // ========================================================================
+  const floralTopImg = document.querySelector('.floral-top-img');
+  const romanticBgFloralImg = document.querySelector('.romantic-bg-floral-img');
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrolled = window.pageYOffset || document.documentElement.scrollTop;
+        if (floralTopImg && scrolled < 450) {
+          floralTopImg.style.transform = `translateY(${scrolled * 0.08}px) scale(1.02)`;
+        }
+        if (romanticBgFloralImg && scrolled < 1800) {
+          romanticBgFloralImg.style.transform = `scale(1) translateY(${scrolled * 0.03}px)`;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 
   // ========================================================================
   // 5. TOAST NOTIFICATION UTILITY
@@ -330,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toast) return;
     const msgEl = toast.querySelector('.toast-message');
     if (msgEl) msgEl.textContent = message;
-    
+
     toast.classList.add('is-visible');
     clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
@@ -348,13 +518,10 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
 
       // Event Details: Sunday, 10 January 2027, 10:45 AM - 11:30 AM IST (UTC+05:30)
-      // 10:45 AM IST = 05:15 UTC
-      // 11:30 AM IST = 06:00 UTC
       const eventTitle = "Nikah Ceremony: Safa & Dhanish Ahmed";
       const eventLocation = "St. Michael Community Hall, Valanar Street, Vedha Nagar, Nagercoil";
       const eventDescription = "Blessed Nikah ceremony of Safa (Daughter of Mr. Kaja Mohideen & Mrs. Aneez Banu) and Dhanish Ahmed (Son of Mr. Mohamed Fakrudeen & Mrs. Sulbath). Venue: https://maps.app.goo.gl/hXpbcaUwu97LtgK59";
 
-      // Generate .ics iCalendar file content
       const icsContent = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -387,5 +554,3 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
-
-
