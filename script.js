@@ -358,46 +358,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const totalDy = targetCenterY - startCenterY;
       const targetScale = targetRect.width / startRect.width;
 
-      // 1. Create flying wrapper positioned at exact startRect
-      const flyerWrap = document.createElement('div');
-      flyerWrap.className = 'monogram-flyer-wrap';
-      flyerWrap.style.left = `${startRect.left}px`;
-      flyerWrap.style.top = `${startRect.top}px`;
-      flyerWrap.style.width = `${startRect.width}px`;
-      flyerWrap.style.height = `${startRect.height}px`;
-
-      // 2. Motion Graphic Calligraphic Ribbons SVG
-      const svgSwirl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svgSwirl.setAttribute('class', 'motion-swirl-svg');
-      svgSwirl.setAttribute('viewBox', '0 0 200 200');
-      svgSwirl.innerHTML = `
-        <defs>
-          <linearGradient id="swirlGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#C5A059" stop-opacity="0" />
-            <stop offset="30%" stop-color="#DFC794" stop-opacity="0.95" />
-            <stop offset="70%" stop-color="#6D0E19" stop-opacity="0.85" />
-            <stop offset="100%" stop-color="#C5A059" stop-opacity="0" />
-          </linearGradient>
-          <linearGradient id="swirlRose" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#5B0218" stop-opacity="0" />
-            <stop offset="40%" stop-color="#C24D62" stop-opacity="0.9" />
-            <stop offset="80%" stop-color="#DFC794" stop-opacity="0.8" />
-            <stop offset="100%" stop-color="#5B0218" stop-opacity="0" />
-          </linearGradient>
-        </defs>
-        <path class="swirl-ribbon-1" d="M 20,180 C 0,110 80,30 110,40 C 145,50 190,100 155,160 C 120,210 50,140 100,100" stroke="url(#swirlGold)" fill="none" stroke-width="2.6" stroke-linecap="round" />
-        <path class="swirl-ribbon-2" d="M 180,20 C 200,90 120,170 90,160 C 55,150 10,100 45,40 C 80,-10 150,60 100,100" stroke="url(#swirlRose)" fill="none" stroke-width="2.2" stroke-linecap="round" />
-      `;
-
-      // 3. Monogram image inside wrapper
+      // 1. Create flying monogram element placed at exact startRect
       const flyer = document.createElement('img');
       flyer.src = openerMonogramImg.src;
       flyer.alt = 'Safa & Dhanish Monogram';
       flyer.className = 'monogram-flyer';
-
-      flyerWrap.appendChild(svgSwirl);
-      flyerWrap.appendChild(flyer);
-      document.body.appendChild(flyerWrap);
+      flyer.style.position = 'fixed';
+      flyer.style.left = `${startRect.left}px`;
+      flyer.style.top = `${startRect.top}px`;
+      flyer.style.width = `${startRect.width}px`;
+      flyer.style.height = `${startRect.height}px`;
+      flyer.style.zIndex = '10005';
+      flyer.style.pointerEvents = 'none';
+      flyer.style.transformOrigin = 'center center';
+      document.body.appendChild(flyer);
 
       // Hide original logos
       openerMonogramImg.style.visibility = 'hidden';
@@ -412,91 +386,47 @@ document.addEventListener('DOMContentLoaded', () => {
       // Trailing stardust along the motion arc
       setTimeout(() => {
         burstParticles(startCenterX + totalDx * 0.35, startCenterY + totalDy * 0.35, 4);
-      }, 350);
+      }, 300);
       setTimeout(() => {
         burstParticles(startCenterX + totalDx * 0.70, startCenterY + totalDy * 0.70, 4);
-      }, 650);
+      }, 550);
 
-      // Animation 1: Wrapper flight translation & destination scale (exact 0.0px landing)
-      const wrapAnim = flyerWrap.animate([
+      // Continuous fluid flight directly along the vertical trajectory into target (no rotation or swirling)
+      const animation = flyer.animate([
         {
           transform: 'translate(0px, 0px) scale(1)',
-          offset: 0
-        },
-        {
-          // Pop and zoom towards the viewer
-          transform: `translate(${totalDx * 0.12}px, ${totalDy * 0.06 - 16}px) scale(1.42)`,
-          offset: 0.22
-        },
-        {
-          // Mid flight descent
-          transform: `translate(${totalDx * 0.48}px, ${totalDy * 0.45}px) scale(1.30)`,
-          offset: 0.52
-        },
-        {
-          // Approaching target position
-          transform: `translate(${totalDx * 0.82}px, ${totalDy * 0.82}px) scale(${1 + (targetScale - 1) * 0.85})`,
-          offset: 0.80
-        },
-        {
-          // Exact 0.0px match with hero destination
-          transform: `translate(${totalDx}px, ${totalDy}px) scale(${targetScale})`,
-          offset: 1
-        }
-      ], {
-        duration: 1100,
-        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-        fill: 'forwards'
-      });
-
-      // Animation 2: Monogram calligraphic S-curve undulation & 360° spin returning to original SND state
-      flyer.animate([
-        {
-          transform: 'rotate(0deg) skew(0deg, 0deg)',
           filter: 'drop-shadow(0 4px 10px rgba(91, 2, 24, 0.2))',
           offset: 0
         },
         {
-          // Initial lift-off flourish
-          transform: 'rotate(65deg) skew(14deg, 8deg)',
-          filter: 'drop-shadow(0 22px 42px rgba(91, 2, 24, 0.52)) drop-shadow(0 0 22px rgba(223, 199, 148, 0.65))',
-          offset: 0.22
+          // Pop and zoom slightly towards viewer with warm luxury glow
+          transform: `translate(${totalDx * 0.15}px, ${totalDy * 0.08 - 14}px) scale(1.38)`,
+          filter: 'drop-shadow(0 20px 40px rgba(91, 2, 24, 0.45)) drop-shadow(0 0 20px rgba(223, 199, 148, 0.55))',
+          offset: 0.28
         },
         {
-          // Fluid snake-like ribbon wave 1
-          transform: 'rotate(155deg) skew(-18deg, -10deg)',
-          filter: 'drop-shadow(0 18px 36px rgba(91, 2, 24, 0.48)) drop-shadow(0 0 16px rgba(223, 199, 148, 0.5))',
-          offset: 0.45
+          // Smooth glide descent towards target position
+          transform: `translate(${totalDx * 0.75}px, ${totalDy * 0.75}px) scale(${1 + (targetScale - 1) * 0.75})`,
+          filter: 'drop-shadow(0 6px 16px rgba(91, 2, 24, 0.25))',
+          offset: 0.78
         },
         {
-          // Fluid snake-like ribbon wave 2
-          transform: 'rotate(245deg) skew(14deg, 7deg)',
-          filter: 'drop-shadow(0 14px 28px rgba(91, 2, 24, 0.4))',
-          offset: 0.68
-        },
-        {
-          // Smooth uncoiling and deceleration
-          transform: 'rotate(325deg) skew(-4deg, -2deg)',
-          filter: 'drop-shadow(0 8px 18px rgba(91, 2, 24, 0.25))',
-          offset: 0.88
-        },
-        {
-          // 100% back to original pristine SND state!
-          transform: 'rotate(360deg) skew(0deg, 0deg)',
+          // Exact 0.0px match landing in hero location
+          transform: `translate(${totalDx}px, ${totalDy}px) scale(${targetScale})`,
           filter: 'drop-shadow(0 3px 10px rgba(109, 14, 25, 0.08))',
           offset: 1
         }
       ], {
-        duration: 1100,
-        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        duration: 950,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
         fill: 'forwards'
       });
 
-      wrapAnim.onfinish = () => {
-        // Perfect cut: reveal real hero logo and cleanup flyer
+      animation.onfinish = () => {
+        // Perfect cut: seamlessly reveal real hero logo and cleanup flyer
         heroMonogramImg.style.visibility = 'visible';
         requestAnimationFrame(() => {
-          flyerWrap.remove();
+          flyer.remove();
         });
         invitationOpener.classList.add('is-hidden');
         invitationOpener.style.display = 'none';
@@ -528,41 +458,13 @@ document.addEventListener('DOMContentLoaded', () => {
       openerCard.classList.add('is-pressed');
     }
 
-    // 2. Start realistic red silk ribbon unfolding & unlocking animation across the card
+    // 2. Start physical pull-tab ribbon opening animation (1.55s total)
     invitationOpener.classList.add('is-unsealing-ribbon');
 
-    // Burst petals and stardust from ribbon knot center as knot comes undone
-    const knotEl = document.getElementById('bowKnot') || document.getElementById('ribbonBowAssembly');
-    if (knotEl) {
-      const knotRect = knotEl.getBoundingClientRect();
-      const knotCenterX = knotRect.left + knotRect.width * 0.5;
-      const knotCenterY = knotRect.top + knotRect.height * 0.28;
-      burstParticles(knotCenterX, knotCenterY, 18);
-    }
-
-    // Secondary ribbon peeling sparkles as knot slips and strings slide left & right
-    setTimeout(() => {
-      if (knotEl) {
-        const knotRect = knotEl.getBoundingClientRect();
-        const knotCenterY = knotRect.top + knotRect.height * 0.28;
-        burstParticles(knotRect.left - 60, knotCenterY, 6);
-        burstParticles(knotRect.right + 60, knotCenterY, 6);
-      }
-    }, 420);
-
-    setTimeout(() => {
-      if (knotEl) {
-        const knotRect = knotEl.getBoundingClientRect();
-        const knotCenterY = knotRect.top + knotRect.height * 0.28;
-        burstParticles(knotRect.left - 120, knotCenterY, 5);
-        burstParticles(knotRect.right + 120, knotCenterY, 5);
-      }
-    }, 850);
-
-    // 3. ONLY THEN (after ribbon has completely unfolded & unlocked over ~1.4s), launch the S&D logo flight & website opening!
+    // 3. Once the knot unknots and ribbon parts open to reveal the card (~1.58s), launch the invitation opening!
     setTimeout(() => {
       openInvitation();
-    }, 1400);
+    }, 1580);
   }
 
   if (openerCard) {
@@ -655,10 +557,10 @@ document.addEventListener('DOMContentLoaded', () => {
     addToCalendarBtn.addEventListener('click', (e) => {
       e.preventDefault();
 
-      // Event Details: Sunday, 10 January 2027, 10:45 AM - 11:30 AM IST (UTC+05:30)
+      // Event Details: Sunday, 10 January 2027, 10:45 AM IST (UTC+05:30)
       const eventTitle = "Nikah Ceremony: Safa & Dhanish Ahmed";
-      const eventLocation = "St. Michael Community Hall, Valanar Street, Vedha Nagar, Nagercoil";
-      const eventDescription = "Blessed Nikah ceremony of Safa (Daughter of Mr. Kaja Mohideen & Mrs. Aneez Banu) and Dhanish Ahmed (Son of Mr. Mohamed Fakrudeen & Mrs. Sulbath). Venue: https://maps.app.goo.gl/hXpbcaUwu97LtgK59";
+      const eventLocation = "Malick Dhinar Baithulmal Jumma Masjid (Nikah) / St. Michael Community Hall (Reception), Nagercoil";
+      const eventDescription = "Blessed Nikah ceremony of Safa (Daughter of Mr. Kaja Mohideen & Mrs. Aneez Banu) and Dhanish Ahmed (Son of Mr. Mohamed Fakrudeen & Mrs. Sulbath) at 10:45 AM at Malick Dhinar Baithulmal Jumma Masjid, followed by reception at St. Michael Community Hall. Venue: https://maps.app.goo.gl/hXpbcaUwu97LtgK59";
 
       const icsContent = [
         "BEGIN:VCALENDAR",
